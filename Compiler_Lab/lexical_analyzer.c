@@ -33,7 +33,7 @@ Tuple_2* token_scan(FILE* fp)
 		retract();
 		token = copy_token();
 		tokenization_tuple->key = NUM;
-		tokenization_tuple->num = install_num(token);
+		tokenization_tuple->value = install_num(token);
 	}
 	else
 	{
@@ -293,10 +293,16 @@ Identifier * install_id(char * token)
 	return p;
 }
 
-int install_num(char * token)
+Identifier * install_num(char * token)
 {
 	int result = atoi(token);
-	return result;
+	Identifier* p = (Identifier*)malloc(sizeof(Identifier));
+	ConstantValue* q = (ConstantValue*)malloc(sizeof(ConstantValue));
+	p->const_value = q;
+	p->name = NULL;
+	p->next_hash = NULL;
+	p->type = NUM;
+	return p;
 }
 
 void error_handle(char ch)

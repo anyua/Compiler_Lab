@@ -70,7 +70,7 @@ int F68(State * new_state, Stack * parameter_stack)
 		if (declarator->key == ID)
 		{
 			if (declarator->next&&declarator->next->key == NUM)
-				offset += (declarator->next->num*specifiers->value->next->key);
+				offset += (declarator->next->value->const_value->num*specifiers->value->next->key);
 			else
 				offset += specifiers->value->next->key;
 			enter(ID_SymbolTable, declarator->value->name, \

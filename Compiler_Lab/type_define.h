@@ -111,8 +111,8 @@ typedef struct Tuple_2 //词法分析输出的二元组
 {
 	int key;
 	Identifier* value;
-	int num;
-	float real;
+	//int num;
+	//float real;
 	struct Tuple_2* next;
 }Tuple_2;
 
