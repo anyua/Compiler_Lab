@@ -1,4 +1,6 @@
 int main ()
 {
-	1 + 2 ;
+	int b[10];
+	int a ;
+	a = 1+2;
 }

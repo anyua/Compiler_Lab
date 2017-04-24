@@ -22,7 +22,7 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 	PASS, PASS, PASS, PASS, F84,	 PASS, F86, PASS, F88, PASS, \
 	F90, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 };
-
+/*
 Tuple_2* pass_param(State * new_state, Stack * parameter_stack)
 {
 	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
@@ -59,6 +59,25 @@ Tuple_2* pass_param(State * new_state, Stack * parameter_stack)
 	p->next = NULL;
 	return p;
 }
+*/
+
+Tuple_2* pass_param(State * new_state, Stack * parameter_stack)
+{
+	State* tstate = pop(parameter_stack);
+	new_state->value = tstate->value;
+	Tuple_2* p = NULL;
+	for (; tstate; tstate = pop(parameter_stack))
+	{
+		if (p)
+		{
+			p->next = tstate->value;
+		}
+		p = tstate->value;
+		for (; p->next ; p = p->next);
+	}
+	return p;
+}
+
 
 int pass(State * new_state, Stack * parameter_stack)
 {
@@ -161,10 +180,12 @@ int F88(State * new_state, Stack * parameter_stack)
 
 int F90(State * new_state, Stack * parameter_stack)
 {
-	new_state->value = (Tuple_2*)malloc(sizeof(Tuple_2));
-	memcpy(new_state->value, parameter_stack->data[4]->value, sizeof(Tuple_2));
-	new_state->value->next = (Tuple_2*)malloc(sizeof(Tuple_2));
-	memcpy(new_state->value->next, parameter_stack->data[2]->value, sizeof(Tuple_2));
+	//new_state->value = (Tuple_2*)malloc(sizeof(Tuple_2));
+	//memcpy(new_state->value, parameter_stack->data[4]->value, sizeof(Tuple_2));
+	//new_state->value->next = (Tuple_2*)malloc(sizeof(Tuple_2));
+	//memcpy(new_state->value->next, parameter_stack->data[2]->value, sizeof(Tuple_2));
+	new_state->value = parameter_stack->data[4]->value;
+	new_state->value->next = parameter_stack->data[2]->value;
 	return 0;
 }
 
@@ -176,8 +197,8 @@ int F32(State * new_state, Stack * parameter_stack)
 
 int F33(State * new_state, Stack * parameter_stack)
 {
-	Identifier* arg1 = parameter_stack->data[3]->value;
-	Identifier* result = parameter_stack->data[1]->value;
+	Identifier* arg1 = parameter_stack->data[1]->value->value;
+	Identifier* result = parameter_stack->data[3]->value->value;
 	int op = parameter_stack->data[2]->value->key;
 	//Identifier* result = newtemp(INT);
 	gencode(op,arg1,NULL,result);
@@ -196,7 +217,6 @@ int F40(State * new_state, Stack * parameter_stack)
 	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
 	State* tstate = parameter_stack->data[1];
 	Tuple_2* tvalue = tstate->value;
-	//memcpy(p, tvalue, sizeof(Tuple_2));
 	Identifier* tid = lookup(ID_SymbolTable, tvalue->value->name);
 	if (tid)
 	{
@@ -245,8 +265,8 @@ int F54(State * new_state, Stack * parameter_stack)
 
 int F55(State * new_state, Stack * parameter_stack)
 {
-	Identifier* arg1 = parameter_stack->data[3]->value;
-	Identifier* arg2 = parameter_stack->data[1]->value;
+	Identifier* arg1 = parameter_stack->data[3]->value->value;
+	Identifier* arg2 = parameter_stack->data[1]->value->value;
 	int op = parameter_stack->data[2]->value->key;
 	Identifier* result = newtemp(INT);
 	gencode(op, arg1, arg2, result);
@@ -272,7 +292,6 @@ int F61(State * new_state, Stack * parameter_stack)
 	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
 	State* tstate = parameter_stack->data[1];
 	Tuple_2* tvalue = tstate->value;
-	//memcpy(p, tvalue, sizeof(Tuple_2));
 	Identifier* tid = lookup(ID_SymbolTable, tvalue->value->name);
 	if (tid)
 	{
@@ -297,8 +316,7 @@ int F62(State * new_state, Stack * parameter_stack)
 
 int F65(State * new_state, Stack * parameter_stack)
 {
-	//Constant_SymbolTable[constant_offset] = parameter_stack->data[1];
-	
+	Constant_SymbolTable[constant_offset++] = parameter_stack->data[1]->value->value;
 	pass_param(new_state, parameter_stack);
 	return 0;
 }
