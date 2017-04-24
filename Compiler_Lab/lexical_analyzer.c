@@ -295,9 +295,11 @@ Identifier * install_id(char * token)
 
 Identifier * install_num(char * token)
 {
-	int result = atoi(token);
+	int num = atoi(token);
 	Identifier* p = (Identifier*)malloc(sizeof(Identifier));
 	ConstantValue* q = (ConstantValue*)malloc(sizeof(ConstantValue));
+	q->num = num;
+	q->str = NULL;
 	p->const_value = q;
 	p->name = NULL;
 	p->next_hash = NULL;
