@@ -14,6 +14,23 @@ int pass(State * new_state, Stack * parameter_stack);
 void gencode(int op,Identifier* arg1,Identifier* arg2,Identifier* result);
 Identifier* newtemp(int type,int offset);
 
+//expression
+int F32(State * new_state, Stack * parameter_stack);
+
+int F33(State * new_state, Stack * parameter_stack);
+
+int F34(State * new_state, Stack * parameter_stack);
+int F40(State * new_state, Stack * parameter_stack);
+int F42(State * new_state, Stack * parameter_stack);
+int F44(State * new_state, Stack * parameter_stack);
+int F46(State * new_state, Stack * parameter_stack);
+int F49(State * new_state, Stack * parameter_stack);
+int F54(State * new_state, Stack * parameter_stack);
+int F57(State * new_state, Stack * parameter_stack);
+int F62(State * new_state, Stack * parameter_stack);
+
+int F65(State * new_state, Stack * parameter_stack);
+
 //Declaration
 int F68(State * new_state, Stack * parameter_stack);
 int F69(State * new_state, Stack * parameter_stack);

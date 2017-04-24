@@ -8,10 +8,10 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, F68, F69, \
+	PASS, PASS, F32, F33, F34,	 PASS, PASS, PASS, PASS, PASS, \
+	F40, PASS, F42, PASS, F44,	 PASS, F46, PASS, PASS, F49, \
+	PASS, PASS, PASS, PASS, F54,	 PASS, PASS, F57, PASS, PASS, \
+	PASS, PASS, F62, PASS, PASS,	 F65, PASS, PASS, F68, F69, \
 	PASS, F71, PASS, F73, PASS,		PASS, PASS, PASS, F78, PASS, \
 	PASS, PASS, PASS, PASS, F84,	 PASS, F86, PASS, F88, PASS, \
 	F90, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
@@ -142,3 +142,73 @@ int F90(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
+int F32(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F33(State * new_state, Stack * parameter_stack)
+{
+	return 0;
+}
+
+int F34(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F40(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F42(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F44(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F46(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F49(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F54(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F57(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F62(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
+
+int F65(State * new_state, Stack * parameter_stack)
+{
+	pass_param(new_state, parameter_stack);
+	return 0;
+}
