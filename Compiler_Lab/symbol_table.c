@@ -12,6 +12,7 @@ Identifier * enter(Identifier** table, char * name, int offset, int type)
 		strcpy(p->name, name);
 		p->offset = offset;
 		p->type = type;
+		p->next_hash = NULL;
 	}
 	else
 	{
@@ -21,6 +22,7 @@ Identifier * enter(Identifier** table, char * name, int offset, int type)
 		strcpy(p->name, name);
 		p->offset = offset;
 		p->type = type;
+		p->next_hash = NULL;
 	}
 	return p;
 }
@@ -35,6 +37,8 @@ Identifier * insert(Identifier** table, char * name)
 		p->next_hash = (Identifier*)malloc(sizeof(Identifier));
 		p->name = (char*)malloc(sizeof(char)*strlen(name));
 		strcpy(p->name, name);
+		p->next_hash = NULL;
+
 	}
 	else
 	{
@@ -42,6 +46,8 @@ Identifier * insert(Identifier** table, char * name)
 		p = table[index];
 		p->name = (char*)malloc(sizeof(char)*strlen(name));
 		strcpy(p->name, name);
+		p->next_hash = NULL;
+
 	}
 	//for (p = table[index]; p != NULL; p = p->next_hash);
 	//p = (Identifier*)malloc(sizeof(Identifier));

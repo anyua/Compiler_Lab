@@ -11,8 +11,8 @@ Tuple_2* pass_param(State* new_state, Stack* parameter_stack);
 
 int pass(State * new_state, Stack * parameter_stack);
 
-void gencode(int op,Identifier* arg1,Identifier* arg2,Identifier* result);
-Identifier* newtemp(int type,int offset);
+int gencode(int op,Identifier* arg1,Identifier* arg2,Identifier* result);
+Identifier* newtemp(int type);
 
 //expression
 int F32(State * new_state, Stack * parameter_stack);
@@ -27,6 +27,7 @@ int F46(State * new_state, Stack * parameter_stack);
 int F49(State * new_state, Stack * parameter_stack);
 int F54(State * new_state, Stack * parameter_stack);
 int F57(State * new_state, Stack * parameter_stack);
+int F61(State * new_state, Stack * parameter_stack);
 int F62(State * new_state, Stack * parameter_stack);
 
 int F65(State * new_state, Stack * parameter_stack);
