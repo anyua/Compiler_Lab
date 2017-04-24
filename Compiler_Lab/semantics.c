@@ -176,10 +176,10 @@ int F32(State * new_state, Stack * parameter_stack)
 int F33(State * new_state, Stack * parameter_stack)
 {
 	Identifier* arg1 = parameter_stack->data[3]->value;
-	Identifier* arg2 = parameter_stack->data[1]->value;
+	Identifier* result = parameter_stack->data[1]->value;
 	int op = parameter_stack->data[2]->value->key;
-	Identifier* result = newtemp(INT);
-	gencode(op,arg1,arg2,result);
+	//Identifier* result = newtemp(INT);
+	gencode(op,arg1,NULL,result);
 	return 0;
 }
 
@@ -201,6 +201,7 @@ int F40(State * new_state, Stack * parameter_stack)
 	{
 		p->key = 0;
 		p->value = tid;
+		p->next = NULL;
 		new_state->value = p;
 	}
 	else
@@ -259,6 +260,7 @@ int F61(State * new_state, Stack * parameter_stack)
 	{
 		p->key = 0;
 		p->value = tid;
+		p->next = NULL;
 		new_state->value = p;
 	}
 	else
