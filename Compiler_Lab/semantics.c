@@ -1,6 +1,7 @@
 #include "semantics.h"
 
 Identifier * ID_SymbolTable[BUCKETS] = { 0 };
+Identifier * ID_SymbolTable[BUCKETS] = { 0 };
 int offset = 0;
 int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 {

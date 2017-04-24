@@ -96,8 +96,16 @@ typedef struct Identifier //符号表项
 	char * name;
 	int type;
 	int offset;
+	ConstantValue* const_value;
 	struct Identifier* next_hash;
 }Identifier;
+
+typedef struct Constant_value
+{
+	char* str;
+	int num;
+	double real;
+}ConstantValue;
 
 typedef struct Tuple_2 //词法分析输出的二元组
 {
