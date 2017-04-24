@@ -1,0 +1,102 @@
+Program Statement Compound-statement Declaration-list Statement-list Expression-statement Selection-statement Jump-statement Expression Assignment-expression Assignment-operator Logical-OR-expression Logical-AND-expression Equality-expression Relational-expression Additive-expreszion Multiplicative-expression Primary-expression Declaration Declaration-specifiers Init-declarator-list Init-declarator Type-specifier Declarator Direct-declarator Pointer Type-qualifier-list Identifier-list Initializer Iteration-statement Translation-unit External-declaration Function-definition Parameter-list Parameter-declaration Constant-expression Postfix-expression
+id i_constant f_constant s_constant + - * / % ; : , = += -= /= *= && || < > ! == <= >= != { } ( ) [ ] void char int short long float double signed unsigned if else break continue do while for return
+Program -> Translation-unit
+Translation-unit -> External-declaration
+Translation-unit -> Translation-unit External-declaration
+External-declaration -> Function-definition
+External-declaration -> Declaration
+Function-definition -> Declaration-specifiers Declarator Compound-statement
+Statement -> Compound-statement
+Statement -> Expression-statement
+Statement -> Selection-statement
+Statement -> Iteration-statement
+Statement -> Jump-statement
+Compound-statement -> { }
+Compound-statement -> { Declaration-list }
+Compound-statement -> { Statement-list }
+Compound-statement -> { Declaration-list Statement-list }
+Declaration-list -> Declaration
+Declaration-list -> Declaration-list Declaration
+Statement-list -> Statement
+Statement-list -> Statement-list Statement
+Expression-statement -> ;
+Expression-statement -> Expression ;
+Selection-statement -> if ( Expression ) Statement
+Selection-statement -> if ( Expression ) Statement else Statement
+Iteration-statement -> while ( Expression ) Statement
+Iteration-statement -> do Statement while ( Expression ) ;
+Iteration-statement -> for ( Expression ; Expression ; Expression ) Statement
+Jump-statement -> continue ;
+Jump-statement -> break ;
+Jump-statement -> return ;
+Jump-statement -> return Expression ;
+Expression -> Assignment-expression
+Expression -> Expression , Assignment-expression
+Assignment-expression -> Logical-OR-expression
+Assignment-expression -> Postfix-expression Assignment-operator Assignment-expression
+Assignment-operator -> =
+Assignment-operator -> *=
+Assignment-operator -> /=
+Assignment-operator -> %=
+Assignment-operator -> +=
+Assignment-operator -> -=
+Postfix-expression -> id 
+Postfix-expression -> Postfix-expression [ Expression ]
+Logical-OR-expression -> Logical-AND-expression
+Logical-OR-expression -> Logical-OR-expression || Logical-AND-expression
+Logical-AND-expression -> Equality-expression
+Logical-AND-expression -> Logical-AND-expression && Equality-expression
+Equality-expression -> Relational-expression
+Equality-expression -> Equality-expression == Relational-expression
+Equality-expression -> Equality-expression != Relational-expression
+Relational-expression -> Additive-expreszion
+Relational-expression -> Relational-expression < Additive-expreszion
+Relational-expression -> Relational-expression > Additive-expreszion
+Relational-expression -> Relational-expression <= Additive-expreszion
+Relational-expression -> Relational-expression >= Additive-expreszion
+Additive-expreszion -> Multiplicative-expression
+Additive-expreszion -> Additive-expreszion + Multiplicative-expression
+Additive-expreszion -> Additive-expreszion - Multiplicative-expression
+Multiplicative-expression -> Primary-expression
+Multiplicative-expression -> Multiplicative-expression * Primary-expression
+Multiplicative-expression -> Multiplicative-expression / Primary-expression
+Multiplicative-expression -> Multiplicative-expression % Primary-expression
+Primary-expression -> id
+Primary-expression -> Constant-expression
+Primary-expression -> ( Expression )
+Constant-expression -> s_constant
+Constant-expression -> i_constant
+Constant-expression -> f_constant
+Declaration -> Declaration-specifiers ;
+Declaration -> Declaration-specifiers Init-declarator-list ;
+Declaration-specifiers -> Type-specifier
+Declaration-specifiers -> Type-specifier Declaration-specifiers
+Init-declarator-list -> Init-declarator
+Init-declarator-list -> Init-declarator-list , Init-declarator
+Init-declarator -> Declarator
+Init-declarator -> Declarator = Initializer
+Type-specifier -> void
+Type-specifier -> char
+Type-specifier -> short
+Type-specifier -> int
+Type-specifier -> long
+Type-specifier -> float
+Type-specifier -> double
+Type-specifier -> signed
+Type-specifier -> unsigned
+Declarator -> Direct-declarator
+Declarator -> Pointer Direct-declarator
+Direct-declarator -> id
+Direct-declarator -> Direct-declarator ( Parameter-list )
+Direct-declarator -> Direct-declarator ( )
+Direct-declarator -> Direct-declarator [ ]
+Direct-declarator -> Direct-declarator [ i_constant ]
+Parameter-list -> Parameter-declaration
+Parameter-list -> Parameter-list , Parameter-declaration
+Parameter-declaration -> Declaration-specifiers Declarator
+Parameter-declaration -> Declaration-specifiers
+Pointer -> *
+Pointer -> * Pointer
+Identifier-list -> id
+Identifier-list -> Identifier-list , id
+Initializer -> Assignment-expression

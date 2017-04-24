@@ -1,0 +1,84 @@
+Program Statement Compound-statement Declaration-list Statement-list Expression-statement Selection-statement Jump-statement Expression Assignment-expression Assignment-operator Logical-OR-expression Logical-AND-expression Equality-expression Relational-expression Additive-expreszion Multiplicative-expression Primary-expression Declaration Declaration-specifiers Init-declarator-list Init-declarator Type-specifier Declarator Direct-declarator Pointer Type-qualifier-list Identifier-list Initializer Iteration-statement
+id + - ( ) * / % ! ; : , .  = += -= <= >= /= *= && || != { } < > == break char continue do double else float for if int long return short signed unsigned void while string-literal
+Program -> Compound-statement
+Statement -> Compound-statement
+Statement -> Expression-statement
+Statement -> Selection-statement
+Statement -> Iteration-statement
+Statement -> Jump-statement
+Compound-statement -> { }
+Compound-statement -> { Declaration-list }
+Compound-statement -> { Statement-list }
+Compound-statement -> { Declaration-list Statement-list }
+Declaration-list -> Declaration
+Declaration-list -> Declaration-list Declaration
+Statement-list -> Statement
+Statement-list -> Statement-list Statement
+Expression-statement -> ;
+Expression-statement -> Expression ;
+Selection-statement -> if ( Expression ) Statement
+Selection-statement -> if ( Expression ) Statement else Statement
+Iteration-statement -> while ( Expression ) Statement
+Iteration-statement -> do Statement while ( Expression ) ;
+Iteration-statement -> for ( Expression ; Expression ; Expression ) Statement
+Jump-statement -> continue ;
+Jump-statement -> break ;
+Jump-statement -> return ;
+Jump-statement -> return Expression ;
+Expression -> Assignment-expression
+Expression -> Expression , Assignment-expression
+Assignment-expression -> Logical-OR-expression
+Assignment-expression -> Primary-expression Assignment-operator Assignment-expression
+Assignment-operator -> =
+Assignment-operator -> *=
+Assignment-operator -> /=
+Assignment-operator -> %=
+Assignment-operator -> +=
+Assignment-operator -> -=
+Logical-OR-expression -> Logical-AND-expression
+Logical-OR-expression -> Logical-OR-expression || Logical-AND-expression
+Logical-AND-expression -> Equality-expression
+Logical-AND-expression -> Logical-AND-expression && Equality-expression
+Equality-expression -> Relational-expression
+Equality-expression -> Equality-expression == Relational-expression
+Equality-expression -> Equality-expression != Relational-expression
+Relational-expression -> Additive-expreszion
+Relational-expression -> Relational-expression < Additive-expreszion
+Relational-expression -> Relational-expression > Additive-expreszion
+Relational-expression -> Relational-expression <= Additive-expreszion
+Relational-expression -> Relational-expression >= Additive-expreszion
+Additive-expreszion -> Multiplicative-expression
+Additive-expreszion -> Additive-expreszion + Multiplicative-expression
+Additive-expreszion -> Additive-expreszion - Multiplicative-expression
+Multiplicative-expression -> Primary-expression
+Multiplicative-expression -> Multiplicative-expression * Primary-expression
+Multiplicative-expression -> Multiplicative-expression / Primary-expression
+Multiplicative-expression -> Multiplicative-expression % Primary-expression
+Primary-expression -> id
+Primary-expression -> string-literal
+Primary-expression -> ( Expression )
+Declaration -> Declaration-specifiers ;
+Declaration -> Declaration-specifiers Init-declarator-list ;
+Declaration-specifiers -> Type-specifier
+Declaration-specifiers -> Type-specifier Declaration-specifiers
+Init-declarator-list -> Init-declarator
+Init-declarator-list -> Init-declarator-list , Init-declarator
+Init-declarator -> Declarator
+Init-declarator -> Declarator = Initializer
+Type-specifier -> void
+Type-specifier -> char
+Type-specifier -> short
+Type-specifier -> int
+Type-specifier -> long
+Type-specifier -> float
+Type-specifier -> double
+Type-specifier -> signed
+Type-specifier -> unsigned
+Declarator -> Direct-declarator
+Declarator -> Pointer Direct-declarator
+Direct-declarator -> id
+Pointer -> *
+Pointer -> * Pointer
+Identifier-list -> id
+Identifier-list -> Identifier-list , id
+Initializer -> Assignment-expression

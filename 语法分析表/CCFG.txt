@@ -1,0 +1,187 @@
+Program Translation-unit External-declaration Function-definition Statement Compound-statement Labeled-statement Declaration-list Statement-list Expression-statement Selection-statement Iteration-statement Jump-statement Expression Assignment-expression Assignment-operator Conditional-expression Logical-OR-expression Logical-AND-expression Inclusive-OR-expression Exclusive-OR-expression AND-expression Equality-expression Relational-expression Shift-expression Additive-expreszion Multiplicative-expression Cast-expression Unary-Expression Unary-operation Postfix-expression Primary-expression Argument-expression-list Constant-expression Declaration Declaration-specifiers Init-declarator-list Init-declarator Storage-class-specifier Type-specifier Type-qualifier Declarator Direct-declarator Pointer Type-qualifier-list Parameter-type-list Parameter-list Parameter-declaration Identifier-list Type-name Specifier-qualifier-list Abstract-declarator Direct-abstract-declarator Initializer Initializer-list Typedef-name
+id + - [ ] ( ) * / & % ! ; : , .  = += -= <= >= <<= >>= ... /= *= ^= &= |= ++ -- -> & && | || != { } ? < > ^ == << >>  auto break case char const continue default do double else extern float for goto if int long register inline restrict return short signed sizeof static struct switch typedf unsigned void volatile while union
+Program -> Translation-unit
+Translation-unit -> External-declaration
+Translation-unit -> Translation-unit External-declaration
+External-declaration -> Function-definition
+External-declaration -> Declaration
+Function-definition -> Declaration-specifiers Declarator Declaration-list Compound-statement
+Statement -> Labeled-statement
+Statement -> Compound-statement
+Statement -> Expression-statement
+Statement -> Selection-statement
+Statement -> Iteration-statement
+Statement -> Jump-statement
+Compound-statement -> { }
+Compound-statement -> { Declaration-list }
+Compound-statement -> { Statement-list }
+Compound-statement -> { Declaration-list Statement-list }
+Labeled-statement -> id : Statement
+Labeled-statement -> case Const-expression : Statement
+Labeled-statement -> default : Statement
+Declaration-list -> Declaration
+Declaration-list -> Declaration-list Declaration
+Statement-list -> Statement
+Statement-list -> Statement-list Statement
+Expression-statement -> ;
+Expression-statement -> Expression ;
+Selection-statement -> if ( Expression ) Statement
+Selection-statement -> if ( Expression ) Statement else Statement
+Selection-statement -> switch ( Expression ) Statement
+Iteration-statement -> while ( Expression ) Statement
+Iteration-statement -> do Statement while ( Expression ) ;
+Iteration-statement -> for ( Expression ; Expression ; Expression ) Statement
+Jump-statement -> goto id ;
+Jump-statement -> continue ;
+Jump-statement -> break ;
+Jump-statement -> return ;
+Jump-statement -> return Expression ;
+Expression -> Assignment-expression
+Expression -> Expression , Assignment-expression
+Assignment-expression -> Conditional-expression
+Assignment-expression -> Unary-Expression Assignment-operator Assignment-expression
+Assignment-operator -> =
+Assignment-operator -> * =
+Assignment-operator -> /=
+Assignment-operator -> %=
+Assignment-operator -> +=
+Assignment-operator -> -=
+Assignment-operator -> <<=
+Assignment-operator -> >>=
+Assignment-operator -> &=
+Assignment-operator -> ^=
+Assignment-operator -> |=
+Conditional-expression -> Logical-OR-expression
+Conditional-expression -> Logical-OR-expression ? Expression : Conditional-expression
+Logical-OR-expression -> Logical-AND-expression
+Logical-OR-expression -> Logical-OR-expression || Logical-AND-expression
+Logical-AND-expression -> Inclusive-OR-expression
+Logical-AND-expression -> Logical-AND-expression && Inclusive-OR-expression
+Inclusive-OR-expression -> Exclusive-OR-expression
+Inclusive-OR-expression -> Inclusive-OR-expression | Exclusive-OR-expression
+Exclusive-OR-expression -> AND-expression
+Exclusive-OR-expression -> Exclusive-OR-expression ^ AND-expression
+AND-expression -> Equality-expression
+AND-expression -> AND-expression & Equality-expression
+Equality-expression -> Relational-expression
+Equality-expression -> Equality-expression == Relational-expression
+Equality-expression -> Equality-expression != Relational-expression
+Relational-expression -> Shift-expression
+Relational-expression -> Relational-expression < Shift-expression
+Relational-expression -> Relational-expression > Shift-expression
+Relational-expression -> Relational-expression <= Shift-expression
+Relational-expression -> Relational-expression >= Shift-expression
+Shift-expression -> Additive-expreszion
+Shift-expression -> Shift-expression << Additive-expreszion
+Shift-expression -> Shift-expression >> Additive-expreszion
+Additive-expreszion -> Multiplicative-expression
+Additive-expreszion -> Additive-expreszion + Multiplicative-expression
+Additive-expreszion -> Additive-expreszion - Multiplicative-expression
+Multiplicative-expression -> Cast-expression
+Multiplicative-expression -> Multiplicative-expression * Cast-expression
+Multiplicative-expression -> Multiplicative-expression / Cast-expression
+Multiplicative-expression -> Multiplicative-expression % Cast-expression
+Cast-expression -> Unary-Expression
+Cast-expression -> ( Type-name ) Cast-expression
+Unary-Expression -> Postfix-expression
+Unary-Expression -> ++ Unary-Expression
+Unary-Expression -> -- Unary-Expression
+Unary-Expression -> Unary-Expression Cast-expression
+Unary-Expression -> sizeof Unary-Expression
+Unary-Expression -> sizeof ( Type-name )
+Unary-operation -> &
+Unary-operation -> *
+Unary-operation -> +
+Unary-operation -> -
+Unary-operation -> !
+Postfix-expression -> Primary-expression
+Postfix-expression -> Postfix-expression [ Expression ]
+Postfix-expression -> Postfix-expression ( )
+Postfix-expression -> Postfix-expression ( Argument-expression-list )
+Postfix-expression -> Postfix-expression . id
+Postfix-expression -> Postfix-expression -> id
+Postfix-expression -> Postfix-expression ++
+Postfix-expression -> Postfix-expression --
+Primary-expression -> id
+Primary-expression -> constant
+Primary-expression -> string-literal
+Primary-expression -> ( Expression )
+Argument-expression-list -> Assignment-expression
+Argument-expression-list -> Argument-expression-list , Assignment-expression
+Constant-expression -> Conditional-expression
+Declaration -> Declaration-specifiers
+Declaration -> Declaration-specifiers Init-declarator-list
+Declaration-specifiers -> Storage-class-specifier
+Declaration-specifiers -> Type-specifier
+Declaration-specifiers -> Type-qualifier
+Declaration-specifiers -> Storage-class-specifier Declaration-specifiers
+Declaration-specifiers -> Type-specifier Declaration-specifiers
+Declaration-specifiers -> Type-qualifier Declaration-specifiers
+Init-declarator-list -> Init-declarator
+Init-declarator-list -> Init-declarator-list , Init-declarator
+Init-declarator -> Declarator
+Init-declarator -> Declarator = Initializer
+Storage-class-specifier -> typedef
+Storage-class-specifier -> extern
+Storage-class-specifier -> static
+Storage-class-specifier -> auto
+Storage-class-specifier -> register
+Type-specifier -> void
+Type-specifier -> char
+Type-specifier -> short
+Type-specifier -> int
+Type-specifier -> long
+Type-specifier -> float
+Type-specifier -> double
+Type-specifier -> signed
+Type-specifier -> unsigned
+Type-specifier -> Typedef-name
+Type-qualifier -> const
+Type-qualifier -> volatile
+Declarator -> Direct-declarator
+Declarator -> Pointer Direct-declarator
+Direct-declarator -> id
+Direct-declarator -> ( Declarator )
+Direct-declarator -> Direct-declarator [ ]
+Direct-declarator -> Direct-declarator [ Constant-expression ]
+Direct-declarator -> Direct-declarator ( )
+Direct-declarator -> Direct-declarator ( Identifier-list )
+Pointer -> *
+Pointer -> * Pointer
+Pointer -> * Type-qualifier-list
+Pointer -> * Type-qualifier-list Pointer
+Type-qualifier-list -> Type-qualifier
+Type-qualifier-list -> Type-qualifier-list Type-qualifier
+Parameter-type-list -> Parameter-list
+Parameter-type-list -> Parameter-list , ...
+Parameter-list -> Parameter-declaration
+Parameter-list -> Parameter-list , Parameter-declaration
+Parameter-declaration -> Declaration-specifiers Declarator
+Parameter-declaration -> Declaration-specifiers
+Parameter-declaration -> Declaration-specifiers Abstract-declarator
+Identifier-list -> id
+Identifier-list -> Identifier-list , id
+Type-name -> Specifier-qualifier-list
+Type-name -> Specifier-qualifier-list Abstract-declarator
+Specifier-qualifier-list -> Type-specifier
+Specifier-qualifier-list -> Type-qualifier
+Specifier-qualifier-list -> Type-specifier Specifier-qualifier-list
+Specifier-qualifier-list -> Type-qualifier Specifier-qualifier-list
+Abstract-declarator -> Pointer
+Abstract-declarator -> Direct-abstract-declarator
+Abstract-declarator -> Pointer Direct-abstract-declarator
+Direct-abstract-declarator -> ( Abstract-declarator )
+Direct-abstract-declarator -> [ ]
+Direct-abstract-declarator -> [ Constant-expression ]
+Direct-abstract-declarator -> ( )
+Direct-abstract-declarator -> ( Parameter-type-list )
+Direct-abstract-declarator -> Direct-abstract-declarator [ ]
+Direct-abstract-declarator -> Direct-abstract-declarator [ Constant-expression ]
+Direct-abstract-declarator -> Direct-abstract-declarator ( )
+Direct-abstract-declarator -> Direct-abstract-declarator ( Parameter-type-list )
+Initializer -> Assignment-expression
+Initializer -> { Initializer-list }
+Initializer -> { Initializer-list , }
+Initializer-list -> Initializer
+Initializer-list -> Initializer-list , Initializer
+Typedef-name -> id
