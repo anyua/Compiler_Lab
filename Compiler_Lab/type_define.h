@@ -91,6 +91,13 @@ typedef struct DoubleBuffer //双缓冲区
 	int count;
 }DoubleBuffer;
 
+typedef struct Constant_value
+{
+	char* str;
+	int num;
+	double real;
+}ConstantValue;
+
 typedef struct Identifier //符号表项
 {
 	char * name;
@@ -99,13 +106,6 @@ typedef struct Identifier //符号表项
 	ConstantValue* const_value;
 	struct Identifier* next_hash;
 }Identifier;
-
-typedef struct Constant_value
-{
-	char* str;
-	int num;
-	double real;
-}ConstantValue;
 
 typedef struct Tuple_2 //词法分析输出的二元组
 {
