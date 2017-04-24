@@ -26,6 +26,7 @@ int F44(State * new_state, Stack * parameter_stack);
 int F46(State * new_state, Stack * parameter_stack);
 int F49(State * new_state, Stack * parameter_stack);
 int F54(State * new_state, Stack * parameter_stack);
+int F55(State * new_state, Stack * parameter_stack);
 int F57(State * new_state, Stack * parameter_stack);
 int F61(State * new_state, Stack * parameter_stack);
 int F62(State * new_state, Stack * parameter_stack);

@@ -2,6 +2,7 @@
 
 Identifier * ID_SymbolTable[BUCKETS] = { 0 };
 Identifier * Constant_SymbolTable[BUCKETS] = { 0 };
+int constant_offset = 0;
 int offset = 0;
 int temp_offset = 0;
 
@@ -15,7 +16,7 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 	PASS, PASS, F32, F33, F34,	 PASS, PASS, PASS, PASS, PASS, \
 	F40, PASS, F42, PASS, F44,	 PASS, F46, PASS, PASS, F49, \
-	PASS, PASS, PASS, PASS, F54,	 PASS, PASS, F57, PASS, PASS, \
+	PASS, PASS, PASS, PASS, F54,	 F55, PASS, F57, PASS, PASS, \
 	PASS, F61, F62, PASS, PASS,	 F65, PASS, PASS, F68, F69, \
 	PASS, F71, PASS, F73, PASS,		PASS, PASS, PASS, F78, PASS, \
 	PASS, PASS, PASS, PASS, F84,	 PASS, F86, PASS, F88, PASS, \
@@ -242,6 +243,23 @@ int F54(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
+int F55(State * new_state, Stack * parameter_stack)
+{
+	Identifier* arg1 = parameter_stack->data[3]->value;
+	Identifier* arg2 = parameter_stack->data[1]->value;
+	int op = parameter_stack->data[2]->value->key;
+	Identifier* result = newtemp(INT);
+	gencode(op, arg1, arg2, result);
+
+	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
+	p->key = 0;
+	p->value = result;
+	p->next = NULL;
+	new_state->value = p;
+
+	return 0;
+}
+
 int F57(State * new_state, Stack * parameter_stack)
 {
 	pass_param(new_state, parameter_stack);
@@ -279,6 +297,8 @@ int F62(State * new_state, Stack * parameter_stack)
 
 int F65(State * new_state, Stack * parameter_stack)
 {
+	//Constant_SymbolTable[constant_offset] = parameter_stack->data[1];
+	
 	pass_param(new_state, parameter_stack);
 	return 0;
 }
