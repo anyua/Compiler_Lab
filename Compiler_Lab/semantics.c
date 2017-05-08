@@ -82,6 +82,29 @@ Identifier * newtemp(int type)
 	return result;
 }
 
+//回填链表管理
+BackpatchingList* makelist(int i)
+{
+	BackpatchingList* newList = (BackpatchingList*)malloc(sizeof(BackpatchingList));
+	newList->next = NULL;
+	newList->num = i;
+	return newList;
+}
+BackpatchingList* merge(BackpatchingList* p1, BackpatchingList* p2)
+{
+	BackpatchingList* p;
+	for (p = p1; p->next; p = p->next);
+	p->next = p2;
+	return p1;
+}
+BackpatchingList* backpatch(BackpatchingList* p, int i)
+{
+	BackpatchingList* newList = (BackpatchingList*)malloc(sizeof(BackpatchingList));
+	newList->next = p;
+	newList->num = i;
+	return newList;
+}
+
 /*
 每一个非终结符的操作函数
 */
@@ -228,4 +251,9 @@ int F65(State * new_state, Stack * parameter_stack)
 	Constant_SymbolTable[constant_offset++] = parameter_stack->data[1]->value->value;
 	pass_param(new_state, parameter_stack);
 	return 0;
+}
+
+int F50(State * new_state, Stack * parameter_stack)
+{
+
 }

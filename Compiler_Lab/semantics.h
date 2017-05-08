@@ -14,7 +14,15 @@ int pass(State * new_state, Stack * parameter_stack);
 int gencode(int op,Identifier* arg1,Identifier* arg2,Identifier* result);
 Identifier* newtemp(int type);
 
+typedef struct backpatching_list
+{
+	int num;
+	struct backpatching_list* next;
+}BackpatchingList;
 
+BackpatchingList* makelist(int i);
+BackpatchingList* merge(BackpatchingList* p1, BackpatchingList* p2);
+BackpatchingList* backpatch(BackpatchingList* p, int i);
 
 //expression
 int F32(State * new_state, Stack * parameter_stack);
@@ -34,6 +42,10 @@ int F61(State * new_state, Stack * parameter_stack);
 int F62(State * new_state, Stack * parameter_stack);
 
 int F65(State * new_state, Stack * parameter_stack);
+
+//logic expression
+int F50(State * new_state, Stack * parameter_stack);
+
 
 //Declaration
 int F68(State * new_state, Stack * parameter_stack);
