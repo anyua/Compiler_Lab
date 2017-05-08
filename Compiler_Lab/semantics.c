@@ -1,12 +1,20 @@
 #include "semantics.h"
 
+//变量以及临时变量符号表（哈希表）
 Identifier * ID_SymbolTable[BUCKETS] = { 0 };
-Identifier * Constant_SymbolTable[BUCKETS] = { 0 };
-int constant_offset = 0;
-int offset = 0;
-int temp_offset = 0;
+//变量地址分配偏移量
+int addr_offset = 0;
+//常量编号计数器
+int temp_count = 0;
 
+//常量表（顺序存储）
+Identifier * Constant_SymbolTable[BUCKETS] = { 0 };
+//常量表偏移量
+int constant_offset = 0;
+
+//三地址码表
 TAC* three_address_code[1000] = { NULL };
+//三地址码写入计数
 int tac_offset = 0;
 
 int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
@@ -14,53 +22,20 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, F32, F33, F34,	 PASS, PASS, PASS, PASS, PASS, \
-	F40, PASS, F42, PASS, F44,	 PASS, F46, PASS, PASS, F49, \
-	PASS, PASS, PASS, PASS, F54,	 F55, PASS, F57, PASS, PASS, \
-	PASS, F61, F62, PASS, PASS,	 F65, PASS, PASS, F68, F69, \
-	PASS, F71, PASS, F73, PASS,		PASS, PASS, PASS, F78, PASS, \
-	PASS, PASS, PASS, PASS, F84,	 PASS, F86, PASS, F88, PASS, \
+	PASS, PASS, pass_param, F33, pass_param,	 PASS, PASS, PASS, PASS, PASS, \
+	F40, PASS, pass_param, PASS, pass_param,	 PASS, pass_param, PASS, PASS, pass_param, \
+	PASS, PASS, PASS, PASS, pass_param,	 F55, PASS, pass_param, PASS, PASS, \
+	PASS, F61, pass_param, PASS, PASS,	 F65, PASS, PASS, F68, pass_param, \
+	PASS, pass_param, PASS, pass_param, PASS,		PASS, PASS, PASS, F78, PASS, \
+	PASS, PASS, PASS, PASS, pass_param,	 PASS, pass_param, PASS, F88, PASS, \
 	F90, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 };
+
 /*
-Tuple_2* pass_param(State * new_state, Stack * parameter_stack)
-{
-	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
-	State* tstate = pop(parameter_stack);
-	Tuple_2* tvalue = tstate->value;
-	memcpy(p, tvalue, sizeof(Tuple_2));
-	new_state->value = p;
-
-	for (; tvalue->next;)
-	{
-		tvalue = tvalue->next;
-		p->next = (Tuple_2*)malloc(sizeof(Tuple_2));
-		p = p->next;
-		memcpy(p, tvalue, sizeof(Tuple_2));
-	}
-	free(tstate);
-
-	for (; parameter_stack->size > 0;)
-	{
-		tstate = pop(parameter_stack);
-		tvalue = tstate->value;
-		p->next = (Tuple_2*)malloc(sizeof(Tuple_2));
-		p = p->next;
-		memcpy(p, tvalue, sizeof(Tuple_2));
-		for (; tvalue->next;)
-		{
-			tvalue = tvalue->next;
-			p->next = (Tuple_2*)malloc(sizeof(Tuple_2));
-			p = p->next;
-			memcpy(p, tvalue, sizeof(Tuple_2));
-		}
-		free(tstate);
-	}
-	p->next = NULL;
-	return p;
-}
+工具函数
 */
 
+//传递所有属性
 Tuple_2* pass_param(State * new_state, Stack * parameter_stack)
 {
 	State* tstate = pop(parameter_stack);
@@ -75,15 +50,17 @@ Tuple_2* pass_param(State * new_state, Stack * parameter_stack)
 		p = tstate->value;
 		for (; p->next ; p = p->next);
 	}
+	//返回末尾属性
 	return p;
 }
 
-
+//不做任何操作
 int pass(State * new_state, Stack * parameter_stack)
 {
 	return 0;
 }
 
+//生成一条三地址码
 int gencode(int op, Identifier * arg1, Identifier * arg2, Identifier * result)
 {
 	printf("%d\n", tac_offset);
@@ -96,14 +73,20 @@ int gencode(int op, Identifier * arg1, Identifier * arg2, Identifier * result)
 	return tac_offset++;
 }
 
+//在符号表中添加一个临时变量
 Identifier * newtemp(int type)
 {
 	char temp[10];
-	itoa(temp_offset++, temp, 8);
+	itoa(temp_count++, temp, 8);
 	Identifier* result = enter(ID_SymbolTable, temp, 4, type);
 	return result;
 }
 
+/*
+每一个非终结符的操作函数
+*/
+
+//Declaration2Specifiers_Declarator
 int F68(State * new_state, Stack * parameter_stack)
 {
 	printf("%d", parameter_stack->size);
@@ -115,89 +98,55 @@ int F68(State * new_state, Stack * parameter_stack)
 		if (declarator->key == ID)
 		{
 			if (declarator->next&&declarator->next->key == NUM)
-				offset += (declarator->next->value->const_value->num*specifiers->value->next->key);
+				addr_offset += (declarator->next->value->const_value->num*specifiers->value->next->key);
 			else
-				offset += specifiers->value->next->key;
+				addr_offset += specifiers->value->next->key;
 			enter(ID_SymbolTable, declarator->value->name, \
-				offset, specifiers->value->key);
+				addr_offset, specifiers->value->key);
 		}
 	}
 	return 0;
 }
 
-int F69(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F71(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F72(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F73(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
+//Type2int
 int F78(State * new_state, Stack * parameter_stack)
 {
 	Tuple_2* p = pass_param(new_state, parameter_stack);
+	//添加一个属性int类型占用的空间
 	p->next = (Tuple_2*)malloc(sizeof(Tuple_2));
 	p->next->key = 4;
 	p->next->next = NULL;
 	return 0;
 }
 
-int F84(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F86(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
+//Declarator2Declarator_BRAC
 int F88(State * new_state, Stack * parameter_stack)
 {
+	//说明声明的是一个函数，暂不进行操作把声明类型设为不可用的-1
 	new_state->value = (Tuple_2*)malloc(sizeof(Tuple_2));
 	new_state->value->key = -1;
 	new_state->value->next = NULL;
 	return 0;
 }
 
+//Declarator2Declarator_SQAR
 int F90(State * new_state, Stack * parameter_stack)
 {
 	//new_state->value = (Tuple_2*)malloc(sizeof(Tuple_2));
 	//memcpy(new_state->value, parameter_stack->data[4]->value, sizeof(Tuple_2));
 	//new_state->value->next = (Tuple_2*)malloc(sizeof(Tuple_2));
 	//memcpy(new_state->value->next, parameter_stack->data[2]->value, sizeof(Tuple_2));
+	//暂不考虑多维数组，把数组名字和数组长度加入属性链表
 	new_state->value = parameter_stack->data[4]->value;
 	new_state->value->next = parameter_stack->data[2]->value;
 	return 0;
 
 }
 
-int F32(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
+//Assign2Exp_Op_Assign
 int F33(State * new_state, Stack * parameter_stack)
 {
+	//从栈中取出相应位置的属性生成三地址码
 	Identifier* arg1 = parameter_stack->data[1]->value->value;
 	Identifier* result = parameter_stack->data[3]->value->value;
 	int op = parameter_stack->data[2]->value->key;
@@ -206,14 +155,10 @@ int F33(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
-int F34(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
+//PosExp2ID
 int F40(State * new_state, Stack * parameter_stack)
 {
+	//对于ID先检查符号表这个id有没有定义，用的话向上传递值没有的话报错
 	//pass_param(new_state, parameter_stack);
 	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
 	State* tstate = parameter_stack->data[1];
@@ -234,38 +179,10 @@ int F40(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
-int F42(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F44(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F46(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F49(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
-int F54(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
+//AddExp2AddExp_puls_MulExp
 int F55(State * new_state, Stack * parameter_stack)
 {
+	//创建一个临时变量，生成一个三地址码，把临时变量地址作为属性
 	Identifier* arg1 = parameter_stack->data[3]->value->value;
 	Identifier* arg2 = parameter_stack->data[1]->value->value;
 	int op = parameter_stack->data[2]->value->key;
@@ -281,14 +198,10 @@ int F55(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
-int F57(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
+//PrimaryExp2ID
 int F61(State * new_state, Stack * parameter_stack)
 {
+	//同前置表达式的操作
 	//pass_param(new_state, parameter_stack);
 	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
 	State* tstate = parameter_stack->data[1];
@@ -309,12 +222,7 @@ int F61(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
-int F62(State * new_state, Stack * parameter_stack)
-{
-	pass_param(new_state, parameter_stack);
-	return 0;
-}
-
+//ConstExp2iconst
 int F65(State * new_state, Stack * parameter_stack)
 {
 	Constant_SymbolTable[constant_offset++] = parameter_stack->data[1]->value->value;

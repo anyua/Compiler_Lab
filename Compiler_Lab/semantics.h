@@ -14,6 +14,8 @@ int pass(State * new_state, Stack * parameter_stack);
 int gencode(int op,Identifier* arg1,Identifier* arg2,Identifier* result);
 Identifier* newtemp(int type);
 
+
+
 //expression
 int F32(State * new_state, Stack * parameter_stack);
 
