@@ -177,8 +177,6 @@ Tuple_2* token_scan(FILE* fp)
 		}
 	}
 	forward();
-	if (tokenization_tuple)
-		tokenization_tuple->next = NULL;
 	return tokenization_tuple;
 }
 

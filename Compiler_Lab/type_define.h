@@ -113,13 +113,28 @@ typedef struct Tuple_2 //词法分析输出的二元组
 	Identifier* value;
 	//int num;
 	//float real;
-	struct Tuple_2* next;
+	//struct Tuple_2* next;
 }Tuple_2;
+
+typedef struct backpatching_list //回填链表
+{
+	int num;
+	struct backpatching_list* next;
+}BackpatchingList;
+
+typedef struct Value //栈数据域
+{
+	int width;
+	Tuple_2* tuple;
+	BackpatchingList* backpatchingList;
+	struct Value* next;
+}Value;
 
 typedef struct State //栈存储项
 {
 	int state;
-	Tuple_2* value;
+	//Tuple_2* value;
+	Value* value;
 }State;
 
 typedef struct Stack //栈

@@ -7,18 +7,14 @@
 	semantic_func[rule_index](new_state, parameter_stack); 
 #define PASS pass
 
-Tuple_2* pass_param(State* new_state, Stack* parameter_stack);
+Value* pass_param(State* new_state, Stack* parameter_stack);
 
 int pass(State * new_state, Stack * parameter_stack);
 
 int gencode(int op,Identifier* arg1,Identifier* arg2,Identifier* result);
 Identifier* newtemp(int type);
 
-typedef struct backpatching_list
-{
-	int num;
-	struct backpatching_list* next;
-}BackpatchingList;
+
 
 BackpatchingList* makelist(int i);
 BackpatchingList* merge(BackpatchingList* p1, BackpatchingList* p2);

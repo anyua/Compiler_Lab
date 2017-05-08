@@ -36,11 +36,11 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 */
 
 //传递所有属性
-Tuple_2* pass_param(State * new_state, Stack * parameter_stack)
+Value* pass_param(State * new_state, Stack * parameter_stack)
 {
 	State* tstate = pop(parameter_stack);
 	new_state->value = tstate->value;
-	Tuple_2* p = NULL;
+	Value* p = NULL;
 	for (; tstate; tstate = pop(parameter_stack))
 	{
 		if (p)
@@ -115,17 +115,17 @@ int F68(State * new_state, Stack * parameter_stack)
 	printf("%d", parameter_stack->size);
 	State* specifiers = parameter_stack->data[3];
 	State* declarator_list = parameter_stack->data[2];
-	Tuple_2 * declarator = declarator_list->value;
+	Value * declarator = declarator_list->value;
 	for (; declarator; declarator = declarator->next)
 	{
-		if (declarator->key == ID)
+		if (declarator->tuple->key == ID)
 		{
-			if (declarator->next&&declarator->next->key == NUM)
-				addr_offset += (declarator->next->value->const_value->num*specifiers->value->next->key);
+			if (declarator->next&&declarator->next->tuple->key == NUM)
+				addr_offset += (declarator->next->tuple->value->const_value->num*specifiers->value->next->width);
 			else
-				addr_offset += specifiers->value->next->key;
-			enter(ID_SymbolTable, declarator->value->name, \
-				addr_offset, specifiers->value->key);
+				addr_offset += specifiers->value->next->width;
+			enter(ID_SymbolTable, declarator->tuple->value->name, \
+				addr_offset, specifiers->value->width);
 		}
 	}
 	return 0;
@@ -134,10 +134,10 @@ int F68(State * new_state, Stack * parameter_stack)
 //Type2int
 int F78(State * new_state, Stack * parameter_stack)
 {
-	Tuple_2* p = pass_param(new_state, parameter_stack);
+	Value* p = pass_param(new_state, parameter_stack);
 	//添加一个属性int类型占用的空间
-	p->next = (Tuple_2*)malloc(sizeof(Tuple_2));
-	p->next->key = 4;
+	p->next = (Value*)malloc(sizeof(Value));
+	p->next->width = 4;
 	p->next->next = NULL;
 	return 0;
 }
@@ -146,8 +146,9 @@ int F78(State * new_state, Stack * parameter_stack)
 int F88(State * new_state, Stack * parameter_stack)
 {
 	//说明声明的是一个函数，暂不进行操作把声明类型设为不可用的-1
-	new_state->value = (Tuple_2*)malloc(sizeof(Tuple_2));
-	new_state->value->key = -1;
+	new_state->value = (Value*)malloc(sizeof(Value));
+	new_state->value->tuple = (Tuple_2*)malloc(sizeof(Tuple_2));
+	new_state->value->tuple->key = -1;
 	new_state->value->next = NULL;
 	return 0;
 }
@@ -170,9 +171,9 @@ int F90(State * new_state, Stack * parameter_stack)
 int F33(State * new_state, Stack * parameter_stack)
 {
 	//从栈中取出相应位置的属性生成三地址码
-	Identifier* arg1 = parameter_stack->data[1]->value->value;
-	Identifier* result = parameter_stack->data[3]->value->value;
-	int op = parameter_stack->data[2]->value->key;
+	Identifier* arg1 = parameter_stack->data[1]->value->tuple->value;
+	Identifier* result = parameter_stack->data[3]->value->tuple->value;
+	int op = parameter_stack->data[2]->value->tuple->key;
 	//Identifier* result = newtemp(INT);
 	gencode(op,arg1,NULL,result);
 	return 0;
@@ -183,14 +184,15 @@ int F40(State * new_state, Stack * parameter_stack)
 {
 	//对于ID先检查符号表这个id有没有定义，用的话向上传递值没有的话报错
 	//pass_param(new_state, parameter_stack);
-	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
+	Value* p = (Value*)malloc(sizeof(Value));
 	State* tstate = parameter_stack->data[1];
-	Tuple_2* tvalue = tstate->value;
-	Identifier* tid = lookup(ID_SymbolTable, tvalue->value->name);
+	Value* tvalue = tstate->value;
+	Identifier* tid = lookup(ID_SymbolTable, tvalue->tuple->value->name);
 	if (tid)
 	{
-		p->key = 0;
-		p->value = tid;
+		p->tuple = (Tuple_2*)malloc(sizeof(Tuple_2));
+		p->tuple->key = 0;
+		p->tuple->value = tid;
 		p->next = NULL;
 		new_state->value = p;
 	}
@@ -206,15 +208,16 @@ int F40(State * new_state, Stack * parameter_stack)
 int F55(State * new_state, Stack * parameter_stack)
 {
 	//创建一个临时变量，生成一个三地址码，把临时变量地址作为属性
-	Identifier* arg1 = parameter_stack->data[3]->value->value;
-	Identifier* arg2 = parameter_stack->data[1]->value->value;
-	int op = parameter_stack->data[2]->value->key;
+	Identifier* arg1 = parameter_stack->data[3]->value->tuple->value;
+	Identifier* arg2 = parameter_stack->data[1]->value->tuple->value;
+	int op = parameter_stack->data[2]->value->tuple->key;
 	Identifier* result = newtemp(INT);
 	gencode(op, arg1, arg2, result);
 
-	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
-	p->key = 0;
-	p->value = result;
+	Value* p = (Value*)malloc(sizeof(Value));
+	p->tuple = (Tuple_2*)malloc(sizeof(Tuple_2));
+	p->tuple->key = 0;
+	p->tuple->value = result;
 	p->next = NULL;
 	new_state->value = p;
 
@@ -226,14 +229,15 @@ int F61(State * new_state, Stack * parameter_stack)
 {
 	//同前置表达式的操作
 	//pass_param(new_state, parameter_stack);
-	Tuple_2* p = (Tuple_2*)malloc(sizeof(Tuple_2));
+	Value* p = (Value*)malloc(sizeof(Value));
 	State* tstate = parameter_stack->data[1];
-	Tuple_2* tvalue = tstate->value;
-	Identifier* tid = lookup(ID_SymbolTable, tvalue->value->name);
+	Value* tvalue = tstate->value;
+	Identifier* tid = lookup(ID_SymbolTable, tvalue->tuple->value->name);
 	if (tid)
 	{
-		p->key = 0;
-		p->value = tid;
+		p->tuple = (Tuple_2*)malloc(sizeof(Tuple_2));
+		p->tuple->key = 0;
+		p->tuple->value = tid;
 		p->next = NULL;
 		new_state->value = p;
 	}
@@ -248,7 +252,7 @@ int F61(State * new_state, Stack * parameter_stack)
 //ConstExp2iconst
 int F65(State * new_state, Stack * parameter_stack)
 {
-	Constant_SymbolTable[constant_offset++] = parameter_stack->data[1]->value->value;
+	Constant_SymbolTable[constant_offset++] = parameter_stack->data[1]->value->tuple->value;
 	pass_param(new_state, parameter_stack);
 	return 0;
 }

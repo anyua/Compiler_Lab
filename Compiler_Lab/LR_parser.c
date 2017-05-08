@@ -183,9 +183,11 @@ void lr_parser(Grammer * grammer, Table * action_table, Table * goto_table, char
 		{
 			State* new_state = (State*)malloc(sizeof(State));
 			new_state->state = action_state;
-			new_state->value = (Tuple_2*)malloc(sizeof(Tuple_2));
-			//strcpy(new_state->character, next_symbol);
-			memcpy(new_state->value, next_symbol, sizeof(Tuple_2));
+			//new_state->value = (Tuple_2*)malloc(sizeof(Tuple_2));
+			new_state->value = (Value*)malloc(sizeof(Value));
+			new_state->value->next = NULL;
+			new_state->value->tuple = (Tuple_2*)malloc(sizeof(Tuple_2));
+			memcpy(new_state->value->tuple, next_symbol, sizeof(Tuple_2));
 			push(&state_stack, new_state);
 			next_symbol = token_scan(fp);
 		}
