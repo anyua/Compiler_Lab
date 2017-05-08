@@ -60,6 +60,8 @@
 #define FOR		47
 #define RETURN	48
 
+#define GOTO	49
+
 /*
 各种空间大小设置
 */

@@ -15,7 +15,7 @@ int constant_offset = 0;
 //三地址码表
 TAC* three_address_code[1000] = { NULL };
 //三地址码写入计数
-int tac_offset = 0;
+int nextquad = 0;
 
 int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 {
@@ -24,7 +24,7 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 	PASS, PASS, pass_param, F33, pass_param,	 PASS, PASS, PASS, PASS, PASS, \
 	F40, PASS, pass_param, PASS, pass_param,	 PASS, pass_param, PASS, PASS, pass_param, \
-	PASS, PASS, PASS, PASS, pass_param,	 F55, PASS, pass_param, PASS, PASS, \
+	F50, PASS, PASS, PASS, pass_param,	 F55, PASS, pass_param, PASS, PASS, \
 	PASS, F61, pass_param, PASS, PASS,	 F65, PASS, PASS, F68, pass_param, \
 	PASS, pass_param, PASS, pass_param, PASS,		PASS, PASS, PASS, F78, PASS, \
 	PASS, PASS, PASS, PASS, pass_param,	 PASS, pass_param, PASS, F88, PASS, \
@@ -63,14 +63,14 @@ int pass(State * new_state, Stack * parameter_stack)
 //生成一条三地址码
 int gencode(int op, Identifier * arg1, Identifier * arg2, Identifier * result)
 {
-	printf("%d\n", tac_offset);
-	three_address_code[tac_offset] = (TAC*)malloc(sizeof(TAC));
-	TAC* tac = three_address_code[tac_offset];
+	printf("%d\n", nextquad);
+	three_address_code[nextquad] = (TAC*)malloc(sizeof(TAC));
+	TAC* tac = three_address_code[nextquad];
 	tac->arg1 = arg1;
 	tac->arg2 = arg2;
 	tac->op = op;
 	tac->result = result;
-	return tac_offset++;
+	return nextquad++;
 }
 
 //在符号表中添加一个临时变量
@@ -259,5 +259,16 @@ int F65(State * new_state, Stack * parameter_stack)
 
 int F50(State * new_state, Stack * parameter_stack)
 {
-
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->backpatchingList = makelist(nextquad);
+	p->next = (Value*)malloc(sizeof(Value));
+	p->next->backpatchingList = makelist(nextquad + 1);
+	p->next->next = NULL;
+	Identifier* arg1 = parameter_stack->data[3]->value->tuple->value;
+	Identifier* arg2 = parameter_stack->data[1]->value->tuple->value;
+	gencode(IF, arg1, arg2, NULL);
+	gencode(GOTO, NULL, NULL, NULL);
+	
+	return 0;
 }

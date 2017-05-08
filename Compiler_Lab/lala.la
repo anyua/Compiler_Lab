@@ -3,5 +3,5 @@ int main ()
 	int b ;
 	int a ;
 	int c ;
-	a = b < c;
+	b < c;
 }
