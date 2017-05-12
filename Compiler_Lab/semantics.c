@@ -22,10 +22,10 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 	PASS, PASS, PASS, PASS, PASS,	 PASS, F6, pass_param, pass_param, PASS, \
 	PASS, PASS, PASS, pass_param, PASS,	 PASS, PASS, pass_param, F18, PASS, \
 	pass_param, PASS, F22, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	pass_param, PASS, pass_param, F33, pass_param,	 PASS, PASS, PASS, PASS, PASS, \
-	F40, PASS, pass_param, PASS, pass_param,	 PASS, pass_param, PASS, PASS, pass_param, \
-	F50, PASS, PASS, PASS, pass_param,	 F55, PASS, pass_param, PASS, PASS, \
-	PASS, F61, pass_param, PASS, PASS,	 F65, PASS, PASS, F68, pass_param, \
+	pass_param, PASS, pass_param, F33, pass_param,	 pass_param, pass_param, pass_param, pass_param, pass_param, \
+	F40, PASS, pass_param, PASS, pass_param,	 PASS, pass_param, F50, F50, pass_param, \
+	F50, F50, F50, F50, pass_param,	 F55, F55, pass_param, F55, F55, \
+	F55, F61, pass_param, PASS, PASS,	 F65, PASS, PASS, F68, pass_param, \
 	PASS, pass_param, PASS, pass_param, PASS,		PASS, PASS, PASS, F78, PASS, \
 	PASS, PASS, PASS, PASS, pass_param,	 PASS, pass_param, PASS, F88, PASS, \
 	F90, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
@@ -247,6 +247,7 @@ int F55(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
+
 //PrimaryExp2ID
 int F61(State * new_state, Stack * parameter_stack)
 {
@@ -291,7 +292,8 @@ int F50(State * new_state, Stack * parameter_stack)
 	p->next->next = NULL;
 	Identifier* arg1 = parameter_stack->data[3]->value->tuple->value;
 	Identifier* arg2 = parameter_stack->data[1]->value->tuple->value;
-	gencode(LT, arg1, arg2, NULL);
+	int op = parameter_stack->data[2]->value->tuple->key;
+	gencode(op, arg1, arg2, NULL);
 	gencode(GOTO, NULL, NULL, NULL);
 	
 	return 0;
