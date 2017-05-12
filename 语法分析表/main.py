@@ -138,19 +138,24 @@ def get_closuer2(g, item, first):
             rule, dot, foward_c = i
             if dot < len(rule[1]):
                 for new_r in [r for r in p if rule[1][dot] == r[0]]:
+                    new_dot = 0
+                    if new_r[1] == ['~']:
+                        new_dot = 1
                     new_foward_c = set()
                     beta = rule[1][dot+1:]
                     for c in beta:
                         new_foward_c = new_foward_c.union(first[c])
                         if '~' not in first[c]:
                             break
+                        else:
+                            new_foward_c.remove('~')
                     else:
                         for b in foward_c:
                             if b=='$':
                                 new_foward_c = new_foward_c.union({'$'})
                             else:
                                 new_foward_c = new_foward_c.union(first[b])
-                    new_item = (new_r, 0, new_foward_c)
+                    new_item = (new_r, new_dot, new_foward_c)
                     if new_item not in item_closuer:
                         item_closuer.append(new_item)
                         flag = 0
@@ -194,6 +199,9 @@ def get_action_table(g, c, first):
     for ii in c:
         for item in ii:
             rule, dot, foward_c = item
+            if rule[1] == ['~']:
+                for i in t:
+                    action_table[c.index(ii)][t.index(i)] = str(p.index(rule) + STATE_OFFSET)
             if dot < len(rule[1]):
                 if rule[1][dot] in t:
                     a = rule[1][dot]
@@ -225,6 +233,9 @@ if __name__ == "__main__":
     Filename = "TINY_C.cfg"
     Action_table_filename = "tiny_c_action.txt"
     Goto_table_filename = "tiny_c_goto.txt"
+    # Filename = "CFG.txt"
+    # Action_table_filename = "CFG_action.txt"
+    # Goto_table_filename = "CFG_goto.txt"
     start_time = time.time()
     G = get_grammer(Filename)
     end_time = time.time()
@@ -268,7 +279,7 @@ if __name__ == "__main__":
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     print("collect " + str(len(Items)) + " items")
     # for i in Items:
-    #    print(i)
+    #     print(i)
     print("---------------------------------------------------")
     print("Get action table...")
     start_time = time.time()

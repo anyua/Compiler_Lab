@@ -68,7 +68,7 @@
 #define BUFFER_SIZE 2048 //文法文件读取缓冲区大小
 #define TABLE_SIZE_LENGTH 5000
 #define TABLE_SIZE_WIDTH 60
-#define STATE_OFFSET 10000 
+#define STATE_OFFSET 10000
 #define ACCEPT_STATE 23333
 #define STACK_SIZE 1000
 #define SIZE_OF_BUFFER 1024 //源文件读取双缓冲区大小
@@ -127,6 +127,7 @@ typedef struct backpatching_list //回填链表
 typedef struct Value //栈数据域
 {
 	int width;
+	int quad;
 	Tuple_2* tuple;
 	BackpatchingList* backpatchingList;
 	struct Value* next;

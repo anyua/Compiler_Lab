@@ -2,6 +2,8 @@
 
 Stack state_stack = { .size = 0 };
 
+extern int(*semantic_func[])(State* new_state, Stack* parameter_stack);
+
 Table * load_table(char * filename)
 {
 	Table* p = (Table*)malloc(sizeof(Table));
@@ -196,6 +198,10 @@ void lr_parser(Grammer * grammer, Table * action_table, Table * goto_table, char
 			int rule_index = action_state - STATE_OFFSET;
 			char* rule = grammer->P[rule_index];
 			int beta = beta_len(rule);
+			//
+			if (rule_index >= 100)
+				beta = 0;
+			//
 			char* A = get_A(rule);
 			Stack parameter_stack = { .size = 0 };
 			for (int i = 0; i < beta; i++)

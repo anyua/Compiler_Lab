@@ -18,7 +18,7 @@ Identifier* newtemp(int type);
 
 BackpatchingList* makelist(int i);
 BackpatchingList* merge(BackpatchingList* p1, BackpatchingList* p2);
-BackpatchingList* backpatch(BackpatchingList* p, int i);
+void backpatch(BackpatchingList* p, int i);
 
 //expression
 int F32(State * new_state, Stack * parameter_stack);
@@ -40,7 +40,15 @@ int F62(State * new_state, Stack * parameter_stack);
 int F65(State * new_state, Stack * parameter_stack);
 
 //logic expression
+int F22(State * new_state, Stack * parapeter_stack);
+int F6(State * new_state, Stack * parapeter_stack);
+int F18(State * new_state, Stack * parapeter_stack);
+
 int F50(State * new_state, Stack * parameter_stack);
+
+int M(State * new_state, Stack * paraeter_stack);
+int N(State * new_state, Stack * paraeter_stack);
+
 
 
 //Declaration

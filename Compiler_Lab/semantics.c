@@ -19,16 +19,17 @@ int nextquad = 0;
 
 int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 {
-	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
-	PASS, PASS, pass_param, F33, pass_param,	 PASS, PASS, PASS, PASS, PASS, \
+	PASS, PASS, PASS, PASS, PASS,	 PASS, F6, pass_param, pass_param, PASS, \
+	PASS, PASS, PASS, pass_param, PASS,	 PASS, PASS, pass_param, F18, PASS, \
+	pass_param, PASS, F22, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
+	pass_param, PASS, pass_param, F33, pass_param,	 PASS, PASS, PASS, PASS, PASS, \
 	F40, PASS, pass_param, PASS, pass_param,	 PASS, pass_param, PASS, PASS, pass_param, \
 	F50, PASS, PASS, PASS, pass_param,	 F55, PASS, pass_param, PASS, PASS, \
 	PASS, F61, pass_param, PASS, PASS,	 F65, PASS, PASS, F68, pass_param, \
 	PASS, pass_param, PASS, pass_param, PASS,		PASS, PASS, PASS, F78, PASS, \
 	PASS, PASS, PASS, PASS, pass_param,	 PASS, pass_param, PASS, F88, PASS, \
 	F90, PASS, PASS, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
+	M, N
 };
 
 /*
@@ -93,16 +94,33 @@ BackpatchingList* makelist(int i)
 BackpatchingList* merge(BackpatchingList* p1, BackpatchingList* p2)
 {
 	BackpatchingList* p;
-	for (p = p1; p->next; p = p->next);
-	p->next = p2;
-	return p1;
+	if (p1)
+	{
+		for (p = p1; p->next; p = p->next);
+		p->next = p2;
+		return p1;
+	}
+	else if (p2)
+	{
+		for (p = p2; p->next; p = p->next);
+		p->next = p1;
+		return p2;
+	}
+	else
+		return NULL;
 }
-BackpatchingList* backpatch(BackpatchingList* p, int i)
+void backpatch(BackpatchingList* p, int i)
 {
-	BackpatchingList* newList = (BackpatchingList*)malloc(sizeof(BackpatchingList));
-	newList->next = p;
-	newList->num = i;
-	return newList;
+	BackpatchingList* q;
+	if (p)
+	{
+		q = p;
+		three_address_code[q->num]->result = (Identifier*)i;
+		for (; q->next; q = q->next)
+		{
+			three_address_code[q->num]->result = (Identifier*)i;
+		}
+	}
 }
 
 /*
@@ -176,6 +194,11 @@ int F33(State * new_state, Stack * parameter_stack)
 	int op = parameter_stack->data[2]->value->tuple->key;
 	//Identifier* result = newtemp(INT);
 	gencode(op,arg1,NULL,result);
+	// Ìí¼Ó»ØÌîÁ´±í
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->backpatchingList = NULL;
+	p->next = NULL;
 	return 0;
 }
 
@@ -257,6 +280,7 @@ int F65(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
+//<
 int F50(State * new_state, Stack * parameter_stack)
 {
 	Value* p = (Value*)malloc(sizeof(Value));
@@ -267,8 +291,72 @@ int F50(State * new_state, Stack * parameter_stack)
 	p->next->next = NULL;
 	Identifier* arg1 = parameter_stack->data[3]->value->tuple->value;
 	Identifier* arg2 = parameter_stack->data[1]->value->tuple->value;
-	gencode(IF, arg1, arg2, NULL);
+	gencode(LT, arg1, arg2, NULL);
 	gencode(GOTO, NULL, NULL, NULL);
 	
+	return 0;
+}
+
+//Selection-statement -> if ( Expression ) M Statement N else M Statement
+int F22(State * new_state, Stack * parapeter_stack)
+{
+	Value* expressionValue = parapeter_stack->data[8]->value;
+	Value* m1Value = parapeter_stack->data[6]->value;
+	Value* s1Value = parapeter_stack->data[5]->value;
+	Value* nValue = parapeter_stack->data[4]->value;
+	Value* m2Value = parapeter_stack->data[2]->value;
+	Value* s2Value = parapeter_stack->data[1]->value;
+	backpatch(expressionValue->backpatchingList, m1Value->quad);
+	backpatch(expressionValue->next->backpatchingList, m2Value->quad);
+
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = NULL;
+	p->backpatchingList = merge(s1Value->backpatchingList, \
+		merge(nValue->backpatchingList,s2Value->backpatchingList));
+	return 0;
+}
+
+int F6(State * new_state, Stack * paraeter_stack)
+{
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = NULL;
+	p->backpatchingList = paraeter_stack->data[1]->value->next->backpatchingList;
+	return 0;
+}
+
+// Statement_list->Statement_list M Statement
+int F18(State * new_state, Stack * paraeter_stack)
+{
+	Value* mValue = paraeter_stack->data[2]->value;
+	Value* l1Value = paraeter_stack->data[3]->value;
+	Value* sValue = paraeter_stack->data[1]->value;
+
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = NULL;
+	p->backpatchingList = sValue->backpatchingList;
+
+	backpatch(l1Value->backpatchingList, mValue->quad);
+}
+
+int M(State * new_state, Stack * paraeter_stack)
+{
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = NULL;
+
+	p->quad = nextquad;
+	return 0;
+}
+
+int N(State * new_state, Stack * paraeter_stack)
+{
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->backpatchingList = makelist(nextquad);
+	p->next = NULL;
+	gencode(GOTO, NULL, NULL, NULL);
 	return 0;
 }

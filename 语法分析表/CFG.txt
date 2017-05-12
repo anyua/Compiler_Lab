@@ -1,9 +1,6 @@
-S E T F
-+ * ( ) id
-S -> E
-E -> E + T 
-E -> T
-T -> T * F 
-T -> F
-F -> ( E )
-F -> id
+A S B
+a
+A -> S
+S -> B B
+B -> a
+B -> ~
