@@ -1,15 +1,17 @@
 int main ()
 {
-	int b ;
-	int a ;
-	if (a<b)
+	int a;
+	int b;
+	int c;
+	a = 1;
+	b = 2;
+	if ( b < a )
 	{
-		a = 1;
-		a = 2;
+		b = 3
 	}
-	else
+	else 
 	{
-		b = 2;
+		a = 3
 	}
-	b = a;
+	c = 10
 }

@@ -21,9 +21,9 @@ int(*semantic_func[])(State* new_state, Stack* parameter_stack) = \
 {
 	PASS, PASS, PASS, PASS, PASS,	 PASS, F6, pass_param, pass_param, PASS, \
 	PASS, PASS, PASS, pass_param, PASS,	 PASS, PASS, pass_param, F18, PASS, \
-	pass_param, PASS, F22, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
+	pass_param, F21, F22, PASS, PASS,	 PASS, PASS, PASS, PASS, PASS, \
 	pass_param, PASS, pass_param, F33, pass_param,	 pass_param, pass_param, pass_param, pass_param, pass_param, \
-	F40, PASS, pass_param, PASS, pass_param,	 PASS, pass_param, F50, F50, pass_param, \
+	F40, PASS, pass_param, F43, pass_param,	 F45, pass_param, F50, F50, pass_param, \
 	F50, F50, F50, F50, pass_param,	 F55, F55, pass_param, F55, F55, \
 	F55, F61, pass_param, PASS, PASS,	 F65, PASS, PASS, F68, pass_param, \
 	PASS, pass_param, PASS, pass_param, PASS,		PASS, PASS, PASS, F78, PASS, \
@@ -299,6 +299,21 @@ int F50(State * new_state, Stack * parameter_stack)
 	return 0;
 }
 
+//Selection - statement -> if (Expression) M Statement
+int F21(State * new_state, Stack * parapeter_stack)
+{
+	Value* mValue = parapeter_stack->data[2]->value;
+	Value* s1Value = parapeter_stack->data[1]->value;
+	Value* expressionValue = parapeter_stack->data[4]->value;
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = NULL;
+	backpatch(expressionValue->backpatchingList, mValue->quad);
+	p->backpatchingList = merge(expressionValue->next->backpatchingList, s1Value->backpatchingList);
+	return 0;
+}
+
+
 //Selection-statement -> if ( Expression ) M Statement N else M Statement
 int F22(State * new_state, Stack * parapeter_stack)
 {
@@ -316,6 +331,24 @@ int F22(State * new_state, Stack * parapeter_stack)
 	p->next = NULL;
 	p->backpatchingList = merge(s1Value->backpatchingList, \
 		merge(nValue->backpatchingList,s2Value->backpatchingList));
+	return 0;
+}
+
+//Iteration-statement -> while ( M Expression ) M Statement
+int F23(State * new_state, Stack * parapeter_stack)
+{
+	Value* expressionValue = parapeter_stack->data[4]->value;
+	Value* m1Value = parapeter_stack->data[5]->value;
+	Value* s1Value = parapeter_stack->data[1]->value;
+	Value* m2Value = parapeter_stack->data[2]->value;
+	backpatch(s1Value->backpatchingList, m1Value->quad);
+	backpatch(expressionValue->backpatchingList, m2Value->quad);
+
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = NULL;
+	p->backpatchingList = expressionValue->next->backpatchingList;
+	gencode(GOTO, NULL, NULL, (Identifier*)m1Value->quad);
 	return 0;
 }
 
@@ -341,6 +374,40 @@ int F18(State * new_state, Stack * paraeter_stack)
 	p->backpatchingList = sValue->backpatchingList;
 
 	backpatch(l1Value->backpatchingList, mValue->quad);
+}
+
+//Logical - OR - expression->Logical - OR - expression || M Logical - AND - expression
+int F43(State * new_state, Stack * paraeter_stack)
+{
+	Value* b1Value = paraeter_stack->data[4]->value;
+	Value* mValue = paraeter_stack->data[2]->value;
+	Value* b2Value = paraeter_stack->data[1]->value;
+	backpatch(b1Value->next->backpatchingList, mValue->quad);
+
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = (Value*)malloc(sizeof(Value));
+	p->backpatchingList = merge(b1Value->backpatchingList, b2Value->backpatchingList);
+	p->next->backpatchingList = b2Value->next->backpatchingList;
+	p->next->next = NULL;
+	return 0;
+}
+
+//Logical-AND-expression -> Logical-AND-expression && M Equality-expression
+int F45(State * new_state, Stack * paraeter_stack)
+{
+	Value* b1Value = paraeter_stack->data[4]->value;
+	Value* mValue = paraeter_stack->data[2]->value;
+	Value* b2Value = paraeter_stack->data[1]->value;
+	backpatch(b1Value->backpatchingList, mValue->quad);
+
+	Value* p = (Value*)malloc(sizeof(Value));
+	new_state->value = p;
+	p->next = (Value*)malloc(sizeof(Value));
+	p->backpatchingList = b2Value->backpatchingList;
+	p->next->backpatchingList = merge(b1Value->next->backpatchingList, b2Value->next->backpatchingList);
+	p->next->next = NULL;
+	return 0;
 }
 
 int M(State * new_state, Stack * paraeter_stack)

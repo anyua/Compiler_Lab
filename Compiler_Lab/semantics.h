@@ -40,11 +40,14 @@ int F62(State * new_state, Stack * parameter_stack);
 int F65(State * new_state, Stack * parameter_stack);
 
 //logic expression
+int F21(State * new_state, Stack * parapeter_stack);
 int F22(State * new_state, Stack * parapeter_stack);
 int F6(State * new_state, Stack * parapeter_stack);
 int F18(State * new_state, Stack * parapeter_stack);
 
 int F50(State * new_state, Stack * parameter_stack);
+int F43(State * new_state, Stack * parameter_stack);
+int F45(State * new_state, Stack * parameter_stack);
 
 int M(State * new_state, Stack * paraeter_stack);
 int N(State * new_state, Stack * paraeter_stack);
